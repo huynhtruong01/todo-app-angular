@@ -1,0 +1,44 @@
+<div class="todo">
+    <div class="todo__group">
+        <label class="todo__input">
+            <input
+                type="checkbox"
+                [checked]="todo.isComplete"
+                class="todo__input--checkbox"
+                (change)="handleCheckboxChange($event)"
+            />
+            <span class="todo__input--inner"></span>
+        </label>
+        <div class="todo__content">
+            <h3 class="todo__title" [ngClass]="{ checked: todo.isComplete }">
+                {{ todo.title }}
+            </h3>
+            <p class="todo__description" [ngClass]="{ checked: todo.isComplete }">
+                {{ todo.description }}
+            </p>
+            <div
+                class="todo__time"
+                [ngClass]="{ checked: todo.isComplete }"
+                [ngClass]="{ due: expire }"
+            >
+                <ng-container *ngIf="!expire && !msgExpire">
+                    <span>{{ dateTime }}</span>
+                </ng-container>
+                <ng-container *ngIf="expire && !msgExpire">
+                    <span>{{ dateTime }}</span>
+                </ng-container>
+                <ng-container *ngIf="expire && msgExpire">
+                    <span>{{ msgExpire }}</span>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+    <div class="todo__btns">
+        <button class="todo__btns--update" (click)="handleEditTodo($event)">
+            <i class="fa-sharp fa-solid fa-pen"></i>
+        </button>
+        <button class="todo__btns--delete" (click)="handleDeleteTodo($event)">
+            <i class="fa-solid fa-trash"></i>
+        </button>
+    </div>
+</div>

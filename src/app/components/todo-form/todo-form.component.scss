@@ -1,0 +1,107 @@
+.form {
+    margin-bottom: 50px;
+
+    &__group {
+        margin-bottom: 20px;
+    }
+
+    &__input {
+        width: 60%;
+        margin: 0 auto;
+        text-align: left;
+        margin-bottom: 20px;
+
+        label {
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #282a3a;
+
+            span {
+                color: #dc3535;
+            }
+        }
+
+        label.error {
+            color: #dc3535;
+        }
+
+        input {
+            padding: 16px 12px;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: 500;
+            border: 2px solid transparent;
+        }
+
+        input:focus {
+            border: 2px solid #0014ff;
+        }
+
+        input.error {
+            border-color: #dc3535;
+        }
+
+        input.error:focus {
+            border-color: #dc3535;
+        }
+
+        p {
+            color: #dc3535;
+            padding-left: 10px;
+            margin-top: 4px;
+            font-size: 14px;
+        }
+    }
+
+    &__btns {
+        button {
+            padding: 15px 30px;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            transition: 0.2s ease-in-out;
+
+            i {
+                margin-right: 6px;
+            }
+        }
+
+        &--add {
+            background-color: #eb6440;
+
+            &:hover {
+                background-color: #dc3535;
+            }
+        }
+
+        &--edit {
+            background-color: #009eff;
+
+            &:hover {
+                background-color: #0014ff;
+            }
+        }
+    }
+}
+
+.btn-submit {
+    padding: 15px 30px;
+    border-radius: 8px;
+    background-color: #eb6440;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    transition: 0.2s ease-in-out;
+
+    i {
+        margin-right: 6px;
+    }
+
+    &:hover {
+        background-color: #dc3535;
+    }
+}

@@ -1,0 +1,66 @@
+<form id="form" class="form" (ngSubmit)="handleSubmit($event)">
+    <div class="form__group">
+        <div class="form__input">
+            <label for="title" [ngClass]="{ error: msgErrors.titleError }"
+                >Title<span>*</span></label
+            >
+            <input
+                type="text"
+                id="title"
+                placeholder="Enter title..."
+                name="titleVal"
+                [(ngModel)]="vals.titleVal"
+                [ngModelOptions]="{ standalone: true }"
+                [ngClass]="{ error: msgErrors.titleError }"
+            />
+            <p>{{ msgErrors.titleError }}</p>
+        </div>
+        <div class="form__input">
+            <label for="description" [ngClass]="{ error: msgErrors.descriptionError }"
+                >Description <span>*</span></label
+            >
+            <input
+                type="text"
+                id="description"
+                name="descriptionVal"
+                placeholder="Enter description..."
+                [(ngModel)]="vals.descriptionVal"
+                [ngModelOptions]="{ standalone: true }"
+                [ngClass]="{ error: msgErrors.descriptionError }"
+            />
+            <p>{{ msgErrors.descriptionError }}</p>
+        </div>
+        <div class="form__input">
+            <label for="date-picker" [ngClass]="{ error: msgErrors.dateTimeError }"
+                >Date time<span>*</span></label
+            >
+            <input
+                type="datetime-local"
+                id="date-picker"
+                name="datePickerVal"
+                [(ngModel)]="vals.dateTimeVal"
+                [ngModelOptions]="{ standalone: true }"
+                [ngClass]="{ error: msgErrors.dateTimeError }"
+            />
+            <p>{{ msgErrors.dateTimeError }}</p>
+        </div>
+    </div>
+    <div class="form__btns">
+        <button
+            type="submit"
+            class="form__btns--add"
+            *ngIf="!todo.id"
+            [disabled]="isSubmitted"
+        >
+            <i class="fa-regular fa-plus"></i>Add
+        </button>
+        <button
+            type="submit"
+            class="form__btns--edit"
+            *ngIf="todo.id"
+            [disabled]="isSubmitted"
+        >
+            <i class="fa-sharp fa-solid fa-pen"></i>Update
+        </button>
+    </div>
+</form>

@@ -1,0 +1,29 @@
+<div class="filters">
+    <div class="filters__tabs--list">
+        <div
+            class="filters__tabs--item"
+            [ngClass]="{ active: mode === 'all' }"
+            (click)="handleChangeMode($event)"
+        >
+            All ({{ numsTodoTab.numsAll }})
+        </div>
+        <div
+            class="filters__tabs--item"
+            [ngClass]="{ active: mode === 'active' }"
+            (click)="handleChangeMode($event)"
+        >
+            Active ({{ numsTodoTab.numsActive }})
+        </div>
+        <div
+            class="filters__tabs--item"
+            [ngClass]="{ active: mode === 'completed' }"
+            (click)="handleChangeMode($event)"
+        >
+            Completed ({{ numsTodoTab.numsCompleted }})
+        </div>
+    </div>
+    <button class="filters__delete-all-completed" (click)="handleDelete()">
+        <i class="fa-solid fa-trash"></i>
+        Delete all completed
+    </button>
+</div>

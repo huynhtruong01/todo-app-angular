@@ -1807,6 +1807,14 @@ adjust-sourcemap-loader@^4.0.0:
   resolved "https://registry.yarnpkg.com/adjust-sourcemap-loader/-/adjust-sourcemap-loader-4.0.0.tgz#fc4a0fd080f7d10471f30a7320f25560ade28c99"
   integrity sha512-OXwN5b9pCUXNQHJpwwD2qP40byEmSgzj8B4ydSN0uMNYWiFmJ6x6KwUllMmfk8Rwu/HJDFR7U8ubsWBoN0Xp0A==
 
+adjust-sourcemap-loader@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/adjust-sourcemap-loader/-/adjust-sourcemap-loader-5.0.0.tgz#3bd5557f25ee730295cfa451dd330a41b49ad662"
+  integrity sha512-wtrCI9uKl7FWAj4F5pLHjMpHMg3k28UONiS0oMML97DBt06xvJ8Z3NDAY6HNmsUj8yxB4GMGLUbIoaJ2YhLwTQ==
+  dependencies:
+    loader-utils "^3.2.0"
+    regex-parser "^2.2.11"
+
 agent-base@6, agent-base@^6.0.2:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/agent-base/-/agent-base-6.0.2.tgz#49fff58577cfee3f37176feab4c22e00f86d7f77"
@@ -1879,6 +1887,13 @@ ajv@^8.0.0, ajv@^8.8.0:
     json-schema-traverse "^1.0.0"
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
+
+angular-toastify@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/angular-toastify/-/angular-toastify-1.0.4.tgz#4f60845d6381920e6ea0fa03d81554ad154a25e0"
+  integrity sha512-1EnIUGsjXLnOv+NrkR7zFPjd3OXm8djVqXDadn2LGCPTXXDiq/ZQtJ5ox3QNCtrpcBN5ljqBuhsVyLVeoUnIUw==
+  dependencies:
+    tslib "^2.1.0"
 
 ansi-colors@4.1.3:
   version "4.1.3"
@@ -3975,7 +3990,7 @@ loader-runner@^4.2.0:
   resolved "https://registry.yarnpkg.com/loader-runner/-/loader-runner-4.3.0.tgz#c1b4a163b99f614830353b16755e7149ac2314e1"
   integrity sha512-3R/1M+yS3j5ou80Me59j7F9IMs4PXs3VqRrm0TU3AbKPxlmpoY1TNscJV/oGJXo8qCatFGTfDbY6W6ipGOYXfg==
 
-loader-utils@3.2.1:
+loader-utils@3.2.1, loader-utils@^3.2.0:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/loader-utils/-/loader-utils-3.2.1.tgz#4fb104b599daafd82ef3e1a41fb9265f87e1f576"
   integrity sha512-ZvFw1KWS3GVyYBYb7qkmRM/WwL2TQQBxgCK62rlvm4WpVQ23Nb4tYjApUlfjrEGvOs7KHEsmyUn75OHZrJMWPw==
@@ -4259,6 +4274,11 @@ mkdirp@^1.0.3, mkdirp@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
+
+moment@^2.29.4:
+  version "2.29.4"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
+  integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
 
 ms@2.0.0:
   version "2.0.0"
