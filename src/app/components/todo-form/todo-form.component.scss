@@ -42,13 +42,14 @@
 
         input.error {
             border-color: #dc3535;
+            color: #dc3535;
         }
 
         input.error:focus {
             border-color: #dc3535;
         }
 
-        p {
+        small {
             color: #dc3535;
             padding-left: 10px;
             margin-top: 4px;

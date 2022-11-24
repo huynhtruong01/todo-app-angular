@@ -1,4 +1,4 @@
-<form id="form" class="form" (ngSubmit)="handleSubmit($event)">
+<!-- <form id="form" class="form" (ngSubmit)="handleSubmit($event)" [formGroup]="valsForm">
     <div class="form__group">
         <div class="form__input">
             <label for="title" [ngClass]="{ error: msgErrors.titleError }"
@@ -12,6 +12,7 @@
                 [(ngModel)]="vals.titleVal"
                 [ngModelOptions]="{ standalone: true }"
                 [ngClass]="{ error: msgErrors.titleError }"
+                formControlName="title"
             />
             <p>{{ msgErrors.titleError }}</p>
         </div>
@@ -27,6 +28,7 @@
                 [(ngModel)]="vals.descriptionVal"
                 [ngModelOptions]="{ standalone: true }"
                 [ngClass]="{ error: msgErrors.descriptionError }"
+                formControlName="description"
             />
             <p>{{ msgErrors.descriptionError }}</p>
         </div>
@@ -41,8 +43,98 @@
                 [(ngModel)]="vals.dateTimeVal"
                 [ngModelOptions]="{ standalone: true }"
                 [ngClass]="{ error: msgErrors.dateTimeError }"
+                formControlName="dateTime"
             />
             <p>{{ msgErrors.dateTimeError }}</p>
+        </div>
+    </div>
+    <div class="form__btns">
+        <button
+            type="submit"
+            class="form__btns--add"
+            *ngIf="!todo.id"
+            [disabled]="isSubmitted"
+        >
+            <i class="fa-regular fa-plus"></i>Add
+        </button>
+        <button
+            type="submit"
+            class="form__btns--edit"
+            *ngIf="todo.id"
+            [disabled]="isSubmitted"
+        >
+            <i class="fa-sharp fa-solid fa-pen"></i>Update
+        </button>
+    </div>
+</form> -->
+
+<form id="form" class="form" (ngSubmit)="handleSubmit($event)" [formGroup]="valsForm">
+    <div class="form__group">
+        <div class="form__input">
+            <label
+                for="title"
+                [ngClass]="{ error: submitted && valsForm.controls.title.errors }"
+                >Title<span>*</span></label
+            >
+            <input
+                type="text"
+                id="title"
+                placeholder="Enter title..."
+                name="titleVal"
+                [ngClass]="{ error: submitted && !!valsForm.controls.title.errors }"
+                formControlName="title"
+                (input)="handleInput()"
+            />
+            <p *ngIf="submitted && valsForm.controls.title.errors">
+                <small *ngIf="submitted && valsForm.get('title').hasError?.('required')"
+                    >Please enter title</small
+                >
+                <small
+                    *ngIf="submitted && valsForm.get('title').hasError?.('atLeastTwoWords')"
+                    >Please enter title at least two words</small
+                >
+            </p>
+        </div>
+        <div class="form__input">
+            <label
+                for="description"
+                [ngClass]="{ error: submitted && valsForm.controls.description.errors }"
+                >Description <span>*</span></label
+            >
+            <input
+                type="text"
+                id="description"
+                name="descriptionVal"
+                placeholder="Enter description..."
+                [ngClass]="{ error: submitted && valsForm.controls.description.errors }"
+                formControlName="description"
+            />
+            <small *ngIf="submitted && !!valsForm.controls.description.errors">
+                <ng-container
+                    *ngIf="submitted && valsForm.controls.description.errors.required"
+                    >Please enter description</ng-container
+                >
+            </small>
+        </div>
+        <div class="form__input">
+            <label
+                for="date-picker"
+                [ngClass]="{ error: submitted && valsForm.controls.dateTime.errors }"
+                >Date time<span>*</span></label
+            >
+            <input
+                type="datetime-local"
+                id="date-picker"
+                name="datePickerVal"
+                [ngClass]="{ error: submitted && valsForm.controls.dateTime.errors }"
+                formControlName="dateTime"
+            />
+            <small *ngIf="submitted && !!valsForm.controls.dateTime.errors">
+                <ng-container
+                    *ngIf="submitted && valsForm.controls.dateTime.errors.required"
+                    >Please choose date time</ng-container
+                >
+            </small>
         </div>
     </div>
     <div class="form__btns">

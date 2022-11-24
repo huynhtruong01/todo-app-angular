@@ -7,6 +7,7 @@ import {
     Output,
     SimpleChanges,
 } from '@angular/core'
+import { Form, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Todo } from 'src/app/models'
 
 interface ValInputs {
@@ -34,61 +35,93 @@ export class TodoFormComponent implements OnInit, OnChanges {
     @Output() updateTodoEmitter: EventEmitter<Todo> = new EventEmitter<Todo>()
 
     isSubmitted: boolean = false
+    submitted: boolean = false
 
-    constructor() {}
+    valsForm: any
 
-    vals: ValInputs = {
-        titleVal: '',
-        descriptionVal: '',
-        dateTimeVal: new Date(0),
-    }
+    constructor(private fb: FormBuilder) {}
 
-    msgErrors: MsgErrorInput = {
-        titleError: '',
-        descriptionError: '',
-        dateTimeError: '',
-    }
-
-    ngOnInit(): void {}
-
-    resetError(): void {
-        this.msgErrors.titleError = ''
-        this.msgErrors.descriptionError = ''
-        this.msgErrors.dateTimeError = ''
-    }
-
-    validateForm(): boolean {
-        if (!this.vals.titleVal) {
-            this.msgErrors.titleError = 'Please enter title'
-            return false
+    ngOnChanges(changes: SimpleChanges): void {
+        if ('todo' in changes) {
+            this.valsForm?.setValue({
+                title: changes['todo'].currentValue.title,
+                description: changes['todo'].currentValue.description,
+                dateTime: changes['todo'].currentValue.dateTime,
+            })
+        } else {
+            this.valsForm?.setValue({
+                title: '',
+                description: '',
+                dateTime: '',
+            })
         }
-
-        if (!this.vals.descriptionVal) {
-            this.msgErrors.descriptionError = 'Please enter description'
-            return false
-        }
-
-        if (new Date(this.vals.dateTimeVal).getTime() <= new Date().getTime()) {
-            this.msgErrors.dateTimeError = 'Please choose date greater than date now'
-            return false
-        }
-
-        return true
     }
 
+    ngOnInit(): void {
+        this.valsForm = this.fb.group({
+            title: ['', [Validators.required, this.atLeastTwoWords]],
+            description: ['', Validators.required],
+            dateTime: ['', Validators.required],
+        })
+    }
+
+    handleInput(): void {
+        console.log(this.valsForm.controls)
+    }
+
+    atLeastTwoWords(control: FormControl): any {
+        const isAtLeastTwoWords =
+            control.value.split(' ').filter((x: string) => !!x && x.length >= 2).length >=
+            2
+        if (!isAtLeastTwoWords) return { atLeastTwoWords: true }
+        return null
+    }
+
+    // handleInput(): void {
+    //     console.log(this.valsForm.value, this.valsForm.controls, this.valsForm.invalid)
+    // }
+
+    // reset error
+    // resetError(): void {
+    //     this.msgErrors.titleError = ''
+    //     this.msgErrors.descriptionError = ''
+    //     this.msgErrors.dateTimeError = ''
+    // }
+
+    // validate form
+    // validateForm(): boolean {
+    //     if (!this.vals.titleVal) {
+    //         this.msgErrors.titleError = 'Please enter title'
+    //         return false
+    //     }
+
+    //     if (!this.vals.descriptionVal) {
+    //         this.msgErrors.descriptionError = 'Please enter description'
+    //         return false
+    //     }
+
+    //     if (new Date(this.vals.dateTimeVal).getTime() <= new Date().getTime()) {
+    //         this.msgErrors.dateTimeError = 'Please choose date greater than date now'
+    //         return false
+    //     }
+
+    //     return true
+    // }
+
+    // reset form
     resetForm(): void {
-        this.vals.titleVal = ''
-        this.vals.descriptionVal = ''
-        this.vals.dateTimeVal = new Date(0)
+        this.valsForm.get('title').reset()
+        this.valsForm.get('description').reset()
+        this.valsForm.get('dateTime').reset()
     }
 
     // add todo
     handleAddTodo(): void {
         const todo: Todo = {
             id: Date.now(),
-            title: this.vals.titleVal,
-            description: this.vals.descriptionVal,
-            dateTime: this.vals.dateTimeVal,
+            title: this.valsForm.value.title,
+            description: this.valsForm.value.description,
+            dateTime: this.valsForm.value.dateTime,
             isComplete: false,
         }
 
@@ -99,9 +132,9 @@ export class TodoFormComponent implements OnInit, OnChanges {
     handleUpdateTodo(): void {
         const todo: Todo = {
             ...this.todo,
-            title: this.vals.titleVal,
-            description: this.vals.descriptionVal,
-            dateTime: this.vals.dateTimeVal,
+            title: this.valsForm.value.title,
+            description: this.valsForm.value.description,
+            dateTime: this.valsForm.value.dateTime,
         }
         this.updateTodoEmitter.emit(todo)
         this.todo = {} as Todo
@@ -110,30 +143,23 @@ export class TodoFormComponent implements OnInit, OnChanges {
     // submit
     handleSubmit(e: SubmitEvent): void {
         e.preventDefault()
-        this.resetError()
-        const isValid: boolean = this.validateForm()
-        if (!isValid) return
+
+        this.submitted = true
         this.isSubmitted = true
+
+        console.log(this.valsForm.invalid)
+        // check form is valid??
+        if (this.valsForm.invalid) return
+
+        // form valid, send data
         if (this.todo.id) {
             this.handleUpdateTodo()
         } else {
             this.handleAddTodo()
         }
 
+        this.submitted = false
         this.isSubmitted = false
-
         this.resetForm()
-    }
-
-    ngOnChanges(changes: SimpleChanges): void {
-        if ('todo' in changes) {
-            this.vals.titleVal = changes['todo'].currentValue.title
-            this.vals.descriptionVal = changes['todo'].currentValue.description
-            this.vals.dateTimeVal = changes['todo'].currentValue.dateTime
-        } else {
-            this.vals.titleVal = ''
-            this.vals.descriptionVal = ''
-            this.vals.dateTimeVal = new Date(0)
-        }
     }
 }

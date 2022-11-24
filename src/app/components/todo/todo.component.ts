@@ -93,6 +93,7 @@ export class TodoComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     handleEditTodo(e: any): void {
+        window.scrollTo(0, 0)
         this.updateTodoEmitter.emit(this.todo)
     }
 }
