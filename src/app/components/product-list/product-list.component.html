@@ -1,0 +1,8 @@
+<div class="product-list">
+    <div *ngFor="let product of productList">
+        <app-product-item [product]="product">
+            <h3 class="product__title">{{ product.title }}</h3>
+            <button class="btn-product-click">{{ product.contentBtn }}</button>
+        </app-product-item>
+    </div>
+</div>

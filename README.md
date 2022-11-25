@@ -1,3 +1,119 @@
+# NG Layout
+
+## NG Content projection
+
+Khi có những component giống nhau nhưng khác một số nội dung bên trong (`Như ta dùng children trong React để chèn nội dung riêng biệt giữa các component giống nhau`)
+
+### How to use it
+
+Các dạng của selector có thể bao gồm:
+
+-   Tag selector: <ng-content select="some-component-selector-or-html-tag"></ng-content>
+-   CSS Class selector: <ng-content select=".some-class"></ng-content>
+-   Attribute selector: <ng-content select="[some-attr]"></ng-content>
+-   Combine nhiều selectors: <ng-content select="some-component-selector-or-html-tag[some-attr]"></ng-content>
+
+**product-list.html**
+
+```html
+<div class="product-list">
+    <div *ngFor="let product of productList">
+        <app-product-item [product]="product">
+            <h3 class="product__title">{{ product.title }}</h3>
+            <button class="btn-product-click">{{ product.contentBtn }}</button>
+        </app-product-item>
+    </div>
+</div>
+```
+
+**product-list.component.ts**
+
+```ts
+import { Component, OnInit } from '@angular/core'
+
+export interface Product {
+    title: string
+    description: string
+    contentBtn: string
+}
+
+@Component({
+    selector: 'app-product-list',
+    templateUrl: './product-list.component.html',
+    styleUrls: ['./product-list.component.scss'],
+})
+export class ProductListComponent implements OnInit {
+    constructor() {}
+
+    ngOnInit(): void {}
+
+    productList: Product[] = [
+        {
+            title: 'Title 1',
+            description:
+                'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s',
+            contentBtn: 'Click 1',
+        },
+        {
+            title: 'Title 2',
+            description:
+                'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s',
+            contentBtn: 'Click 2',
+        },
+        {
+            title: 'Title 3',
+            description:
+                'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s',
+            contentBtn: 'Click 3',
+        },
+        {
+            title: 'Title 4',
+            description:
+                'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s',
+            contentBtn: 'Click 4',
+        },
+        {
+            title: 'Title 5',
+            description:
+                'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s',
+            contentBtn: 'Click 5',
+        },
+    ]
+}
+```
+
+**product-item.html**
+
+```html
+<div class="product">
+    <ng-content select=".product__title"></ng-content>
+    <p class="product__desc">{{ product.description }}</p>
+    <ng-content select=".btn-product-click"></ng-content>
+</div>
+```
+
+**product-item.component.ts**
+
+```ts
+import { Component, Input, OnInit } from '@angular/core'
+import { Product } from '../product-list/product-list.component'
+
+@Component({
+    selector: 'app-product-item',
+    templateUrl: './product-item.component.html',
+    styleUrls: ['./product-item.component.scss'],
+})
+export class ProductItemComponent implements OnInit {
+    @Input() product: Product
+
+    constructor() {}
+
+    ngOnInit(): void {}
+}
+```
+
+---
+
 # Form
 
 -   It contains: **Template-drive** and **Reactive Forms**
@@ -13,7 +129,7 @@
 -   **NgForm**:
 -   **NgModel**:
 
-## Reactive Forms
+## Reactive Forms (Part I)
 
 -   **Reactive Forms**: Chúng ta sẽ xây dựng form từ `các model`, là các object có một số chức năng đặc biệt để quản lý được các form input. Nó cũng sử dụng một số (nhưng rất ít) các `directives`.
 
@@ -161,4 +277,130 @@ Angular Reactive Forms cũng cung cấp event ngSubmit giống như Template-dri
 onSubmit(): void {
   console.log(this.signInForm);
 }
+```
+
+## Reactive Forms (Part II)
+
+### Validate Forms with Reactive Forms
+
+Bởi vì với `Reactive Forms`, chúng ta set up form ở trong component và từ đó link đến phần template HTML. Nên phần validators thay vì dùng các attribute trên template, phần code này sẽ được định nghĩa khi bạn setup form thông qua FormBuilder. Phần validate này sẽ đều là các function.
+
+#### Validator functions
+
+Có 2 loại validator function:
+
+1. ##### Sync validators (đồng bộ)
+
+Đây là các function để validate thường gặp, sẽ nhận đầu vào là một form control và trả về `ngay lập tức`:
+
+-   Một danh sách các validation errors.
+-   Hoặc null tức là control này ko có lỗi gì.
+
+Khi khởi tạo FormControl thì Sync validators sẽ được truyền vào ở argument số 2. Argument số 1 sẽ là giá trị mặc định khi khởi tạo form nhé.
+
+```ts
+let control = new FormControl('', Validators.required)
+//Or
+this.fb.control('', Validators.required)
+// Or multiple Validators
+this.fb.control('', [Validators.required, Validators.maxLength(5)])
+```
+
+2. ##### Async validators (bất đồng bộ)
+
+Đây là các validate function sẽ trả về Promise hoặc Observable mà kết quả sẽ được emit trong tương lai. Ví dụ như bạn muốn validate xem username nhập vào đã có trong hệ thống hay chưa. Thì bắt buộc bạn phải gửi một yêu cầu lên server để làm việc này, HTTP request thường sẽ trả về Promise/Observable.
+
+Khi khởi tạo `FormControl` thì async validators sẽ được truyển vào ở argument số 3.
+
+```ts
+isUserNameDuplicated(control: AbstractControl): Observable<ValidationErrors> {
+    return of(null);
+}
+
+let control = new FormControl("", Validators.required, this.isUserNameDuplicated);
+this.fb.control("", Validators.required, this.isUserNameDuplicated);
+```
+
+#### Implement validate function
+
+Angular có cung cấp một set các validate function trong class [Validators](https://angular.io/api/forms/Validators), cụ thể:
+
+```ts
+class Validators {
+    static min(min: number): ValidatorFn
+    static max(max: number): ValidatorFn
+    static required(control: AbstractControl): ValidationErrors | null
+    static requiredTrue(control: AbstractControl): ValidationErrors | null
+    static email(control: AbstractControl): ValidationErrors | null
+    static minLength(minLength: number): ValidatorFn
+    static maxLength(maxLength: number): ValidatorFn
+    static pattern(pattern: string | RegExp): ValidatorFn
+    static nullValidator(control: AbstractControl): ValidationErrors | null
+    static compose(validators: ValidatorFn[]): ValidatorFn | null
+    static composeAsync(validators: AsyncValidatorFn[]): AsyncValidatorFn | null
+}
+```
+
+We can code like this
+
+```ts
+export class TodoForm implements OnInit, OnChanges {
+    ngOnInit(): void {
+        this.signInForm = this.fb.group({
+            username: [
+                '',
+                Validators.compose([
+                    Validators.required,
+                    Validators.minLength(6),
+                    Validators.pattern(/^[a-z]{6,32}$/i),
+                ]),
+            ],
+            password: [
+                '',
+                Validators.compose([
+                    Validators.required,
+                    Validators.minLength(6),
+                    Validators.pattern(/^(?=.*[!@#$%^&*]+)[a-z0-9!@#$%^&*]{6,32}$/),
+                ]),
+            ],
+            rememberMe: false,
+        })
+    }
+}
+```
+
+`Validators.compose` và truyển vào một mảng các validators để có thể kết hợp được nhiều loại validators với nhau
+
+We can custom a other validator
+
+```ts
+import { AbstractControl, ValidatorFn } from '@angular/forms'
+
+export function NoWhitespaceValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } => {
+        let controlVal = control.value
+        if (typeof controlVal === 'number') {
+            controlVal = `${controlVal}`
+        }
+        let isWhitespace = (controlVal || '').trim().length === 0
+        let isValid = !isWhitespace
+        return isValid ? null : { whitespace: 'value is only whitespace' }
+    }
+}
+```
+
+```ts
+import { NoWhitespaceValidator } from './custom-validators'
+
+this.signInForm = this.fb.group({
+    username: [
+        '',
+        Validators.compose([
+            //Validators.required,
+            NoWhitespaceValidator(),
+            Validators.minLength(6),
+            //Validators.pattern(/^[a-z]{6,32}$/i)
+        ]),
+    ],
+})
 ```

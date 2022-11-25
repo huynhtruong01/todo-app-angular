@@ -73,7 +73,7 @@
         <div class="form__input">
             <label
                 for="title"
-                [ngClass]="{ error: submitted && valsForm.controls.title.errors }"
+                [ngClass]="{ error: submitted && valsForm.controls['title'].errors }"
                 >Title<span>*</span></label
             >
             <input
@@ -81,16 +81,16 @@
                 id="title"
                 placeholder="Enter title..."
                 name="titleVal"
-                [ngClass]="{ error: submitted && !!valsForm.controls.title.errors }"
+                [ngClass]="{ error: submitted && !!valsForm.controls['title'].errors }"
                 formControlName="title"
                 (input)="handleInput()"
             />
-            <p *ngIf="submitted && valsForm.controls.title.errors">
-                <small *ngIf="submitted && valsForm.get('title').hasError?.('required')"
+            <p *ngIf="submitted && valsForm.controls['title'].errors">
+                <small *ngIf="submitted && valsForm.get('title')?.hasError?.('required')"
                     >Please enter title</small
                 >
                 <small
-                    *ngIf="submitted && valsForm.get('title').hasError?.('atLeastTwoWords')"
+                    *ngIf="submitted && valsForm.get('title')?.hasError?.('atLeastTwoWords') && !valsForm.get('title')?.hasError?.('required')"
                     >Please enter title at least two words</small
                 >
             </p>
@@ -98,7 +98,9 @@
         <div class="form__input">
             <label
                 for="description"
-                [ngClass]="{ error: submitted && valsForm.controls.description.errors }"
+                [ngClass]="{
+                    error: submitted && valsForm.controls['description'].errors
+                }"
                 >Description <span>*</span></label
             >
             <input
@@ -106,12 +108,16 @@
                 id="description"
                 name="descriptionVal"
                 placeholder="Enter description..."
-                [ngClass]="{ error: submitted && valsForm.controls.description.errors }"
+                [ngClass]="{
+                    error: submitted && valsForm.controls['description'].errors
+                }"
                 formControlName="description"
             />
-            <small *ngIf="submitted && !!valsForm.controls.description.errors">
+            <small *ngIf="submitted && !!valsForm.controls['description'].errors">
                 <ng-container
-                    *ngIf="submitted && valsForm.controls.description.errors.required"
+                    *ngIf="
+                        submitted && valsForm.controls['description'].errors['required']
+                    "
                     >Please enter description</ng-container
                 >
             </small>
@@ -119,19 +125,19 @@
         <div class="form__input">
             <label
                 for="date-picker"
-                [ngClass]="{ error: submitted && valsForm.controls.dateTime.errors }"
+                [ngClass]="{ error: submitted && valsForm.controls['dateTime'].errors }"
                 >Date time<span>*</span></label
             >
             <input
                 type="datetime-local"
                 id="date-picker"
                 name="datePickerVal"
-                [ngClass]="{ error: submitted && valsForm.controls.dateTime.errors }"
+                [ngClass]="{ error: submitted && valsForm.controls['dateTime'].errors }"
                 formControlName="dateTime"
             />
-            <small *ngIf="submitted && !!valsForm.controls.dateTime.errors">
+            <small *ngIf="submitted && !!valsForm.controls['dateTime'].errors">
                 <ng-container
-                    *ngIf="submitted && valsForm.controls.dateTime.errors.required"
+                    *ngIf="submitted && valsForm.controls['dateTime'].errors['required']"
                     >Please choose date time</ng-container
                 >
             </small>

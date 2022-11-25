@@ -1,4 +1,6 @@
 <div class="container">
+    <app-scroll-top></app-scroll-top>
+
     <h2>TODO APP</h2>
     <app-todo-form
         (submitValueEmitter)="handleAddTodo($event)"
@@ -16,4 +18,6 @@
         (deleteTodoEmitter)="handleDeleteTodo($event)"
         (updateTodoEmitter)="handleEditTodo($event)"
     ></app-todo-list>
+
+    <app-product-list></app-product-list>
 </div>

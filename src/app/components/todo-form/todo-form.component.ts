@@ -7,8 +7,9 @@ import {
     Output,
     SimpleChanges,
 } from '@angular/core'
-import { Form, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { Todo } from 'src/app/models'
+import { AtLeastTwoWords } from 'src/app/utils'
 
 interface ValInputs {
     titleVal: string
@@ -36,8 +37,7 @@ export class TodoFormComponent implements OnInit, OnChanges {
 
     isSubmitted: boolean = false
     submitted: boolean = false
-
-    valsForm: any
+    valsForm: FormGroup
 
     constructor(private fb: FormBuilder) {}
 
@@ -59,7 +59,7 @@ export class TodoFormComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
         this.valsForm = this.fb.group({
-            title: ['', [Validators.required, this.atLeastTwoWords]],
+            title: ['', Validators.compose([Validators.required, AtLeastTwoWords()])],
             description: ['', Validators.required],
             dateTime: ['', Validators.required],
         })
@@ -67,14 +67,6 @@ export class TodoFormComponent implements OnInit, OnChanges {
 
     handleInput(): void {
         console.log(this.valsForm.controls)
-    }
-
-    atLeastTwoWords(control: FormControl): any {
-        const isAtLeastTwoWords =
-            control.value.split(' ').filter((x: string) => !!x && x.length >= 2).length >=
-            2
-        if (!isAtLeastTwoWords) return { atLeastTwoWords: true }
-        return null
     }
 
     // handleInput(): void {
@@ -110,9 +102,9 @@ export class TodoFormComponent implements OnInit, OnChanges {
 
     // reset form
     resetForm(): void {
-        this.valsForm.get('title').reset()
-        this.valsForm.get('description').reset()
-        this.valsForm.get('dateTime').reset()
+        this.valsForm.get('title')?.reset()
+        this.valsForm.get('description')?.reset()
+        this.valsForm.get('dateTime')?.reset()
     }
 
     // add todo
@@ -145,13 +137,13 @@ export class TodoFormComponent implements OnInit, OnChanges {
         e.preventDefault()
 
         this.submitted = true
-        this.isSubmitted = true
 
         console.log(this.valsForm.invalid)
         // check form is valid??
         if (this.valsForm.invalid) return
 
         // form valid, send data
+        this.isSubmitted = true
         if (this.todo.id) {
             this.handleUpdateTodo()
         } else {

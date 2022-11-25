@@ -1,0 +1,25 @@
+.product-list {
+    margin-top: 80px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.product__title {
+    margin-bottom: 8px;
+}
+
+.btn-product-click {
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #dc3535;
+    color: #fff;
+    margin-top: 12px;
+    font-weight: bold;
+    font-size: 19px;
+}
+
+div {
+    width: calc(100% / 2 - 10px);
+}
