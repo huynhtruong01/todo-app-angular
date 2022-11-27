@@ -14,10 +14,18 @@
     ></app-filters>
     <app-todo-list
         [todoList]="todoList"
+        [mode]="mode"
         (changeCheckEmitter)="handleChangeComplete($event)"
-        (deleteTodoEmitter)="handleDeleteTodo($event)"
+        (deleteTodoEmitter)="handleGetIdTodo($event)"
         (updateTodoEmitter)="handleEditTodo($event)"
+        (showModalEmitter)="handleShowModal($event)"
     ></app-todo-list>
 
-    <app-product-list></app-product-list>
+    <!-- <app-product-list></app-product-list> -->
 </div>
+
+<lib-ng-toast></lib-ng-toast>
+<app-modal-delete
+    [contentModal]="contentModal"
+    (deleteTodoEmitter)="handleDelete($event)"
+></app-modal-delete>

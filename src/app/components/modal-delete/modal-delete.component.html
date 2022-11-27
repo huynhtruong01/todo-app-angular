@@ -1,0 +1,11 @@
+<div class="modal" [ngClass]="{ show: contentModal?.isShow }">
+    <div class="modal__content">
+        <h3>{{ contentModal?.title }}</h3>
+        <p>{{ contentModal?.description }}</p>
+
+        <div class="modal__btns">
+            <button class="btn-cancel" (click)="handleHideModal()">Cancel</button>
+            <button class="btn-delete" (click)="handleDeleteTodo()">Delete</button>
+        </div>
+    </div>
+</div>

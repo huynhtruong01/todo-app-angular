@@ -10,17 +10,13 @@
             <span class="todo__input--inner"></span>
         </label>
         <div class="todo__content">
-            <h3 class="todo__title" [ngClass]="{ checked: todo.isComplete }">
+            <h3 class="todo__title" [ngClass]="{ checked: isCompleted }">
                 {{ todo.title }}
             </h3>
-            <p class="todo__description" [ngClass]="{ checked: todo.isComplete }">
+            <p class="todo__description" [ngClass]="{ checked: isCompleted }">
                 {{ todo.description }}
             </p>
-            <div
-                class="todo__time"
-                [ngClass]="{ checked: todo.isComplete }"
-                [ngClass]="{ due: expire }"
-            >
+            <div class="todo__time" [ngClass]="{ due: expire }">
                 <ng-container *ngIf="!expire && !msgExpire">
                     <span>{{ dateTime }}</span>
                 </ng-container>

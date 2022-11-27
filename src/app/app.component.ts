@@ -1,42 +1,75 @@
-import { Component } from '@angular/core'
-import { Todo } from './models'
+import { Component, OnInit } from '@angular/core'
+import { NgToastService } from 'ng-angular-popup'
+import { ContentModal } from './components/todo/todo.component'
+import { Toastify, Todo } from './models'
+import { ApiService } from './shared/api.service'
+import { showError, showSuccess } from './utils/toastify'
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
-    todoList: Todo[] = JSON.parse(localStorage.getItem('todo-list') || '[]')
+export class AppComponent implements OnInit {
+    todoList: Todo[] = []
     todoEdit: Todo = {} as Todo
     mode: string = 'all'
+    idTodoDelete: string | number
 
-    handleAddTodo(todo: Todo): void {
-        const newTodoList: Todo[] = JSON.parse(localStorage.getItem('todo-list') || '[]')
-        newTodoList.push(todo)
-        localStorage.setItem('todo-list', JSON.stringify(newTodoList))
-        this.handleFilterTodo(this.mode)
+    titleModal: string
+    descriptionModal: string
+    contentModal: ContentModal
+
+    constructor(private todoServices: ApiService, private toast: NgToastService) {}
+
+    ngOnInit(): void {
+        this.todoServices.getAllTodo().subscribe((todoList: Todo[]) => {
+            this.todoList = todoList
+        })
     }
 
-    handleChangeComplete(todo: Todo): void {
-        const newTodoList: Todo[] = JSON.parse(localStorage.getItem('todo-list') || '[]')
-        const index = newTodoList.findIndex((t: Todo) => t.id === todo.id)
+    handleGetAllTodo() {
+        this.todoServices.getAllTodo().subscribe((todoList: Todo[]) => {
+            this.todoList = todoList
+        })
+    }
 
+    handleAddTodo(todo: Todo) {
+        this.todoServices.createTodo(todo).subscribe((todo: Todo) => {
+            this.todoList = [...this.todoList, todo]
+            this.handleFilterTodo(this.mode)
+        })
+    }
+
+    handleChangeComplete(todo: Todo) {
+        const newTodoList: Todo[] = [...this.todoList]
+        const index = newTodoList.findIndex((t) => t.id === todo.id)
         if (index < 0) return
 
-        newTodoList[index].isComplete = todo.isComplete
-        localStorage.setItem('todo-list', JSON.stringify(newTodoList))
-        this.handleFilterTodo(this.mode)
+        newTodoList[index] = todo
+        this.todoList = newTodoList
+
+        this.todoServices.updateTodo(todo).subscribe()
     }
 
-    handleDeleteTodo(id: string | number): void {
-        const newTodoList: Todo[] = JSON.parse(localStorage.getItem('todo-list') || '[]')
-        const index = newTodoList.findIndex((t: Todo) => t.id === id)
+    handleGetIdTodo(id: string | number): void {
+        this.idTodoDelete = id
+    }
+
+    handleDelete(str: string): void {
+        const newTodoList: Todo[] = [...this.todoList]
+        const index = newTodoList.findIndex((t) => t.id === this.idTodoDelete)
         if (index < 0) return
 
         newTodoList.splice(index, 1)
         this.todoList = newTodoList
-        localStorage.setItem('todo-list', JSON.stringify(newTodoList))
+
+        this.todoServices.deleteTodo(this.idTodoDelete).subscribe((todo: Todo) => {
+            showSuccess(this.toast, {
+                title: 'DELETE TODO',
+                description: `Delete todo "${todo.title}" successfully`,
+            })
+        })
     }
 
     handleEditTodo(todo: Todo): void {
@@ -44,47 +77,39 @@ export class AppComponent {
     }
 
     handleUpdateTodo(todo: Todo): void {
-        const newTodoList: Todo[] = JSON.parse(localStorage.getItem('todo-list') || '[]')
-        const index: number = newTodoList.findIndex((t: Todo) => t.id === todo.id)
-
+        const newTodoList: Todo[] = [...this.todoList]
+        const index = newTodoList.findIndex((t) => t.id === todo.id)
         if (index < 0) return
 
         newTodoList[index] = todo
-        localStorage.setItem('todo-list', JSON.stringify(newTodoList))
-        this.handleFilterTodo(this.mode)
+        this.todoList = newTodoList
+
+        this.todoServices.updateTodo(todo).subscribe((res: Todo) => {
+            showSuccess(this.toast, {
+                title: 'UPDATE TODO',
+                description: `Update todo "${res.title}" successfully 😁😁😁`,
+            })
+        })
     }
 
     handleDeleteAllCompleted(): void {
-        const newTodoList: Todo[] = JSON.parse(
-            localStorage.getItem('todo-list') || '[]'
-        ).filter((todo: Todo) => todo.isComplete !== true)
-
-        localStorage.setItem('todo-list', JSON.stringify(newTodoList))
-        this.todoList = newTodoList
-        this.handleFilterTodo(this.mode)
+        const newTodoList = [...this.todoList]
+        newTodoList.forEach((todo: Todo) => {
+            if (todo.isComplete) {
+                this.todoServices.deleteTodo(todo.id).subscribe((res) => {
+                    console.log(res)
+                })
+            }
+        })
+        this.todoList = newTodoList.filter((todo: Todo) => todo.isComplete !== true)
     }
 
-    handleFilterTodo(mode: string): void {
+    async handleFilterTodo(mode: string) {
         this.mode = mode
-        const todoListLocal: Todo[] = JSON.parse(
-            localStorage.getItem('todo-list') || '[]'
-        )
-        if (mode === 'active') {
-            const todoListFilter: Todo[] = todoListLocal.filter(
-                (todo: Todo) => todo.isComplete === false
-            )
-            this.todoList = todoListFilter
-            return
-        }
+        console.log(mode)
+    }
 
-        if (mode === 'completed') {
-            const todoListFilter: Todo[] = todoListLocal.filter(
-                (todo: Todo) => todo.isComplete === true
-            )
-            this.todoList = todoListFilter
-            return
-        }
-
-        this.todoList = todoListLocal
+    handleShowModal(contentModal: ContentModal): void {
+        this.contentModal = contentModal
     }
 }

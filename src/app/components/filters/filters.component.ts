@@ -8,6 +8,7 @@ import {
     SimpleChanges,
 } from '@angular/core'
 import { Todo } from 'src/app/models'
+import { ApiService } from 'src/app/shared/api.service'
 
 @Component({
     selector: 'app-filters',
@@ -15,11 +16,11 @@ import { Todo } from 'src/app/models'
     styleUrls: ['./filters.component.scss'],
 })
 export class FiltersComponent implements OnInit, OnChanges {
-    constructor() {}
-
     @Input() todoList: Todo[] = JSON.parse(localStorage.getItem('todo-list') || '[]')
     @Output() deleteAllCompleteEmitter: EventEmitter<void> = new EventEmitter<void>()
     @Output() sendModeEmitter: EventEmitter<string> = new EventEmitter<string>()
+
+    constructor(private todoServices: ApiService) {}
 
     numsTodoTab: {
         numsAll: number
@@ -42,26 +43,6 @@ export class FiltersComponent implements OnInit, OnChanges {
         // console.log(text.split(' '))
 
         this.sendModeEmitter.emit(this.mode)
-
-        // if (this.mode === 'active') {
-        //     console.log(this.todoList)
-        //     const newTodoList: Todo[] = this.todoList.filter(
-        //         (todo: Todo) => todo.isComplete === false
-        //     )
-        //     this.newTodoListEmitter.emit(newTodoList)
-        //     return
-        // }
-
-        // if (this.mode === 'completed') {
-        //     const newTodoList: Todo[] = this.todoList.filter(
-        //         (todo: Todo) => todo.isComplete === true
-        //     )
-        //     this.newTodoListEmitter.emit(newTodoList)
-        //     return
-        // }
-
-        // const newTodoList: Todo[] = JSON.parse(localStorage.getItem('todo-list') || '[]')
-        // this.newTodoListEmitter.emit(newTodoList)
     }
 
     handleDelete(): void {
@@ -71,15 +52,13 @@ export class FiltersComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         if ('todoList' in changes) {
             // when todo list in app component change, we get todo list changed from localStorage
-            const todoListLocal: Todo[] = JSON.parse(
-                localStorage.getItem('todo-list') || '[]'
-            )
-            this.numsTodoTab.numsAll = todoListLocal.length
-            this.numsTodoTab.numsActive = todoListLocal.filter(
-                (todo) => !todo.isComplete
+
+            this.numsTodoTab.numsAll = changes['todoList'].currentValue.length
+            this.numsTodoTab.numsActive = changes['todoList'].currentValue.filter(
+                (todo: Todo) => !todo.isComplete
             ).length
-            this.numsTodoTab.numsCompleted = todoListLocal.filter(
-                (todo) => todo.isComplete
+            this.numsTodoTab.numsCompleted = changes['todoList'].currentValue.filter(
+                (todo: Todo) => todo.isComplete
             ).length
         }
     }

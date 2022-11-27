@@ -9,12 +9,13 @@ import {
     SimpleChanges,
 } from '@angular/core'
 import { Todo } from 'src/app/models'
-import {
-    compareTime,
-    countDown,
-    formatDateTime,
-    formatTimeString,
-} from './../../utils/formatTime'
+import { compareTime, countDown, formatDateTime } from './../../utils/formatTime'
+
+export interface ContentModal {
+    title: string
+    description: string
+    isShow: boolean
+}
 
 @Component({
     selector: 'app-todo',
@@ -30,6 +31,8 @@ export class TodoComponent implements OnInit, OnChanges, OnDestroy {
         string | number
     >()
     @Output() updateTodoEmitter: EventEmitter<Todo> = new EventEmitter<Todo>()
+    @Output() showModalEmitter: EventEmitter<ContentModal> =
+        new EventEmitter<ContentModal>()
 
     ngOnInit(): void {}
 
@@ -40,6 +43,8 @@ export class TodoComponent implements OnInit, OnChanges, OnDestroy {
     isCompleted: boolean = false
 
     ngOnChanges(changes: SimpleChanges) {
+        console.log(this.todo)
+
         if ('todo' in changes) {
             // format time
             const hour = 60 * 60 * 1000
@@ -90,6 +95,11 @@ export class TodoComponent implements OnInit, OnChanges, OnDestroy {
 
     handleDeleteTodo(e: any): void {
         this.deleteTodoEmitter.emit(this.todo.id)
+        this.showModalEmitter.emit({
+            title: 'DELETE TODO',
+            description: `Are you sure delete todo name "${this.todo.title}"`,
+            isShow: true,
+        })
     }
 
     handleEditTodo(e: any): void {

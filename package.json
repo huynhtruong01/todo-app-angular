@@ -21,6 +21,7 @@
     "adjust-sourcemap-loader": "^5.0.0",
     "angular-toastify": "^1.0.4",
     "moment": "^2.29.4",
+    "ng-angular-popup": "^0.2.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

@@ -1,10 +1,11 @@
 <div class="todo-list">
-    <ng-container *ngFor="let todo of todoList">
+    <ng-container *ngFor="let todo of filterTodoList">
         <app-todo
             [todo]="todo"
             (checkComplete)="handleEditComplete($event)"
             (deleteTodoEmitter)="handleDeleteTodo($event)"
             (updateTodoEmitter)="handleEditTodo($event)"
+            (showModalEmitter)="handleShowModal($event)"
         ></app-todo>
     </ng-container>
 </div>
