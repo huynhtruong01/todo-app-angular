@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
             this.handleFilterTodo(this.mode)
             showSuccess(this.toast, {
                 title: 'ADD NEW TODO',
-                description: `Add todo ${todo.title} successfully.`,
+                description: `Add todo "${todo.title}" successfully.`,
             })
         })
     }
