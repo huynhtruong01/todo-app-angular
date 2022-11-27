@@ -38,6 +38,10 @@ export class AppComponent implements OnInit {
         this.todoServices.createTodo(todo).subscribe((todo: Todo) => {
             this.todoList = [...this.todoList, todo]
             this.handleFilterTodo(this.mode)
+            showSuccess(this.toast, {
+                title: 'ADD NEW TODO',
+                description: `Add todo ${todo.title} successfully.`,
+            })
         })
     }
 
@@ -67,7 +71,7 @@ export class AppComponent implements OnInit {
         this.todoServices.deleteTodo(this.idTodoDelete).subscribe((todo: Todo) => {
             showSuccess(this.toast, {
                 title: 'DELETE TODO',
-                description: `Delete todo "${todo.title}" successfully`,
+                description: `Delete todo "${todo.title}" successfully.`,
             })
         })
     }
@@ -87,7 +91,7 @@ export class AppComponent implements OnInit {
         this.todoServices.updateTodo(todo).subscribe((res: Todo) => {
             showSuccess(this.toast, {
                 title: 'UPDATE TODO',
-                description: `Update todo "${res.title}" successfully 😁😁😁`,
+                description: `Update todo "${res.title}" successfully.`,
             })
         })
     }
